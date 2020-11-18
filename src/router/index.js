@@ -17,7 +17,7 @@ const formatRouter = (config,routes = []) => {
     return routes
 }
 export default  () => {
-  console.log('aaaaa---', formatRouter(routeConfig))
+  console.log(match,'aaaaa---', formatRouter(routeConfig))
     return (
       <Switch>
         {
