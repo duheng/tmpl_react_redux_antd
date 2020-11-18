@@ -14,7 +14,7 @@ dist/
 .DS_Store
 
 
-
+.cache-loader
 # Xcode
 #
 build/
