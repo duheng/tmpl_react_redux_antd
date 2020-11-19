@@ -12,15 +12,15 @@ const otherRoutes = [
     name: 'error',
     children: [
       {
-          path: '/404',
-          component: Notfound,
+          path: '/error/404',
           exact:true,
+          component: Notfound,
           meta: {
               title: 'robot-statis'
           }
       },
       {
-          path: '/405',
+          path: '/error/405',
           component: Home,
     
           meta: {
@@ -37,23 +37,25 @@ export const appRoutes = [
   {
     path: '/',
     component: Home,
+    exact: true,
     name: 'Home'
   },
   {
     path: '/about',
     component: About,
+    exact: true,
     name: 'About',
     children: [
       {
-          path: '/mozi1',
+          path: '/about/mozi1',
           component: About,
-    
+          exact: true,
           meta: {
               title: 'robot-statis'
           }
       },
       {
-          path: 'mozi2',
+          path: '/about/mozi2',
           component: Home,
           meta: {
               title: 'robot-mark'
@@ -64,6 +66,8 @@ export const appRoutes = [
 
 ]
 
-const routes = [...otherRoutes, ...appRoutes]
 
-export default routes
+export default {
+  otherRoutes,
+  appRoutes
+}

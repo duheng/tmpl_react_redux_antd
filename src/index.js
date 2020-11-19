@@ -8,10 +8,13 @@ import { createBrowserHistory } from "history" // URL模式的history
 
 import configureStore from "app/store/configureStore"
 
+import AppRouter from './router/AppRouter'
+
 const store = configureStore(createBrowserHistory)
+
 const routes = () => (
     <Router>
-        <App/>
+        <App path="*" component={AppRouter} />
     </Router>
 )
 

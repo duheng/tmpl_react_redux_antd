@@ -1,28 +1,18 @@
-import React, { Fragment } from 'react';
-import { Route, Switch, Redirect} from "react-router-dom"
-import routeConfig from './route.config'
+import React, { Component } from "react"
+import { Route, Redirect } from 'react-router-dom'
+export default class App extends Component {
 
-const formatRouter = (config,routes = []) => {
-   config.map(item=>{
-      if(item.children && item.children.length > 0) {
-        let __children = item.children
-        __children.map(child=>{
-          child.path = `${item.path}${child.path}`
-        })
-        formatRouter(__children,routes)
-      }
-      const { children, ...otherItem } = item
-      routes.push(<Route key={item.path}  {...otherItem}  />)
-    })
-    return routes
-}
-export default  () => {
-  console.log(match,'aaaaa---', formatRouter(routeConfig))
+  render() {
+    const { component: Component, ...rest } = this.props
+    const logged = true
+console.log('######@', this.props)
     return (
-      <Switch>
-        {
-          formatRouter(routeConfig)
-        }
-      </Switch>
+      <Route {...rest} render={props => {
+       //   if (pending) return <div>Loading...</div>
+          return logged ? <Component {...props} /> : <Redirect to="/login" />
+        }} 
+      />
     )
+  }
+
 }
