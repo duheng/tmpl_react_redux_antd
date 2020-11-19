@@ -1,53 +1,102 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import TopNav from './components/TopNav';
-import Panel from './components/Panel';
-import Special from './components/Special';
-
+import { Table } from 'antd';
+import reqwest from 'reqwest';
 import connect from 'app/store/connect';
 import style from './style';
 import HomeSelector from 'app/selectors/home';
 import * as HomeActions from 'app/actions/home';
-import hocb from './hocb'; //高阶函数的两种封装方式
+
+const columns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    sorter: true,
+    render: name => `${name.first} ${name.last}`,
+    width: '20%',
+  },
+  {
+    title: 'Gender',
+    dataIndex: 'gender',
+    filters: [
+      { text: 'Male', value: 'male' },
+      { text: 'Female', value: 'female' },
+    ],
+    width: '20%',
+  },
+  {
+    title: 'Email',
+    dataIndex: 'email',
+  },
+];
+
+const getRandomuserParams = params => {
+  return {
+    results: params.pagination.pageSize,
+    page: params.pagination.current,
+    ...params,
+  };
+};
+
+
 @connect(HomeSelector, HomeActions)
-@hocb('AAAA')
 export default class Home extends Component {
-  constructor(...args) {
-    super(...args);
+  state = {
+    data: [],
+    pagination: {
+      current: 1,
+      pageSize: 10,
+    },
+    loading: false,
+  };
+
+  componentDidMount() {
+    const { pagination } = this.state;
+    this.fetch({ pagination });
   }
 
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   //会在初始化和update时触发，用于替换componentWillReceiveProps，
-  //   //可以用来控制 props 更新 state 的过程；它返回一个对象表示新的 state；
-  //   //如果不需要更新，返回 null 即可
-  //   return null
-  // }
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return false
-  // }
-  // getSnapshotBeforeUpdate() {
-  //   // 组件即将销毁
-  //  // 可以在此处移除订阅，定时器等等
-  // }
-  componentDidMount() {
-    const { actions } = this.props;
-    actions.fetchHomeData();
-  }
+  handleTableChange = (pagination, filters, sorter) => {
+    this.fetch({
+      sortField: sorter.field,
+      sortOrder: sorter.order,
+      pagination,
+      ...filters,
+    });
+  };
+
+  fetch = (params = {}) => {
+    this.setState({ loading: true });
+    reqwest({
+      url: 'https://randomuser.me/api',
+      method: 'get',
+      type: 'json',
+      data: getRandomuserParams(params),
+    }).then(data => {
+      console.log(data);
+      this.setState({
+        loading: false,
+        data: data.results,
+        pagination: {
+          ...params.pagination,
+          total: 200,
+          // 200 is mock data, you should read it from server
+          // total: data.totalCount,
+        },
+      });
+    });
+  };
+
   render() {
-    const { homeData } = this.props.home
-    const { indexTop, indexMain, special } = homeData
+    const { data, pagination, loading } = this.state;
     return (
-      <div className="Home">
-        {
-          indexTop && <TopNav data={indexTop}/>
-        }
-        {
-          indexMain && <Panel data={indexMain} />
-        }
-        {
-          special && <Special data={special} />
-        }
-      </div>
+      <Table
+        columns={columns}
+        rowKey={record => record.login.uuid}
+        dataSource={data}
+        pagination={pagination}
+        loading={loading}
+        onChange={this.handleTableChange}
+      />
     );
   }
 }
