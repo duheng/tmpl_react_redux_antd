@@ -39,3 +39,23 @@
  height: 150px;
 }
 
+.mark-detail {
+    dl {
+        display: flex;
+        dt {
+            color: #353535;
+            font-size: 14px;
+        }
+    }
+}
+
+.prod-info {
+    background-color: rgba(242, 242, 242, 1);
+}
+
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }

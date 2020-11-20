@@ -70,7 +70,7 @@ export default class Home extends Component {
         title: 'Action',
         dataIndex: '',
         key: 'x',
-        render: () => <a onClick={_=>this.showMoal()}>详情</a>,
+        render: (item) => <a onClick={_=>this.showMoal(item)}>详情</a>,
       },
     ],
     data: [],
@@ -86,7 +86,8 @@ export default class Home extends Component {
     this.fetch({ pagination });
   }
   
-  showMoal = () => {
+  showMoal = (item) => {
+    console.log('item------', item)
     this.setState({
       visible: true
     })
@@ -145,9 +146,33 @@ export default class Home extends Component {
               onClose={_=>this.onClose()}
               visible={visible}
             >
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
+            <div className="mark-detail">
+              <h3>黑名单</h3>  
+              <dl>
+                <dt>编码:</dt>
+                <dd>p_ias_jsjqqq</dd>
+              </dl>
+              <h3>生产逻辑</h3>  
+              <div className="prod-info">
+                <dl>
+                  <dt>数据源:</dt>
+                  <dd>XXXXXX</dd>
+                </dl>
+                <dl>
+                  <dt>覆盖用户范围:</dt>
+                  <dd>XXXXXX</dd>
+                </dl>
+              </div>
+              <h3>示例数据</h3>  
+              <pre>
+               
+              </pre>
+              <h3>维护信息</h3>  
+              <dl>
+                <dt>离线表名:</dt>
+                <dd>XXXXXX</dd>
+              </dl>
+            </div>
           </Drawer>
   }
 
