@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Input, Radio } from 'antd';
+import { Table, Input, Radio, Drawer } from 'antd';
 
 const { Search } = Input;
 import reqwest from 'reqwest';
@@ -9,34 +9,6 @@ import style from './style';
 import HomeSelector from 'app/selectors/home';
 import * as HomeActions from 'app/actions/home';
 
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    sorter: true,
-    render: name => `${name.first} ${name.last}`,
-    width: '20%',
-  },
-  {
-    title: 'Gender',
-    dataIndex: 'gender',
-    filters: [
-      { text: 'Male', value: 'male' },
-      { text: 'Female', value: 'female' },
-    ],
-    width: '20%',
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email',
-  },
-  {
-    title: 'Action',
-    dataIndex: '',
-    key: 'x',
-    render: () => <a>详情</a>,
-  },
-];
 
 const getRandomuserParams = params => {
   return {
@@ -50,6 +22,7 @@ const getRandomuserParams = params => {
 @connect(HomeSelector, HomeActions)
 export default class Home extends Component {
   state = {
+    visible: false,
     tags: [
       {
         name:'全部',
@@ -72,6 +45,34 @@ export default class Home extends Component {
         value: '5'
       }
     ],
+    columns: [
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        sorter: true,
+        render: name => `${name.first} ${name.last}`,
+        width: '20%',
+      },
+      {
+        title: 'Gender',
+        dataIndex: 'gender',
+        filters: [
+          { text: 'Male', value: 'male' },
+          { text: 'Female', value: 'female' },
+        ],
+        width: '20%',
+      },
+      {
+        title: 'Email',
+        dataIndex: 'email',
+      },
+      {
+        title: 'Action',
+        dataIndex: '',
+        key: 'x',
+        render: () => <a onClick={_=>this.showMoal()}>详情</a>,
+      },
+    ],
     data: [],
     pagination: {
       current: 1,
@@ -84,6 +85,18 @@ export default class Home extends Component {
     const { pagination } = this.state;
     this.fetch({ pagination });
   }
+  
+  showMoal = () => {
+    this.setState({
+      visible: true
+    })
+  }
+
+  onClose = () => {
+    this.setState({
+      visible: false
+    })
+  };
 
   handleTableChange = (pagination, filters, sorter) => {
     this.fetch({
@@ -121,6 +134,23 @@ export default class Home extends Component {
   onSearch = value => console.log(value);
 
   onChange = event => console.log(event);
+
+  markDetail = () => {
+    const { visible } = this.state;
+    return  <Drawer
+              title="标签详情"
+              placement="right"
+              width={500}
+              closable={false}
+              onClose={_=>this.onClose()}
+              visible={visible}
+            >
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+          </Drawer>
+  }
+
   renderTag = () => {
     const { tags } = this.state
    return <Radio.Group className="tag-main" defaultValue="a" size="middle" onChange={event=>this.onChange(event)}>
@@ -130,7 +160,7 @@ export default class Home extends Component {
     </Radio.Group>
   }
   render() {
-    const { data, pagination, loading } = this.state;
+    const { data, pagination, loading, columns } = this.state;
     return (
       <>
         <div className="top-main">
@@ -143,6 +173,7 @@ export default class Home extends Component {
           />
           { this.renderTag() }
         </div>
+        {this.markDetail()}
         <Table
           columns={columns}
           rowKey={record => record.login.uuid}
