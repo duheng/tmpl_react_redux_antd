@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Table } from 'antd';
+import { Table, Input, Radio } from 'antd';
+
+const { Search } = Input;
 import reqwest from 'reqwest';
 import connect from 'app/store/connect';
 import style from './style';
@@ -28,6 +30,12 @@ const columns = [
     title: 'Email',
     dataIndex: 'email',
   },
+  {
+    title: 'Action',
+    dataIndex: '',
+    key: 'x',
+    render: () => <a>详情</a>,
+  },
 ];
 
 const getRandomuserParams = params => {
@@ -42,6 +50,28 @@ const getRandomuserParams = params => {
 @connect(HomeSelector, HomeActions)
 export default class Home extends Component {
   state = {
+    tags: [
+      {
+        name:'全部',
+        value: '1'
+      },
+      {
+        name:'基础属性',
+        value: '2'
+      },
+      {
+        name:'行为属性',
+        value: '3'
+      },
+      {
+        name:'偏好属性',
+        value: '4'
+      },
+      {
+        name:'用户价值及生命周期',
+        value: '5'
+      }
+    ],
     data: [],
     pagination: {
       current: 1,
@@ -63,6 +93,8 @@ export default class Home extends Component {
       ...filters,
     });
   };
+
+  
 
   fetch = (params = {}) => {
     this.setState({ loading: true });
@@ -86,17 +118,40 @@ export default class Home extends Component {
     });
   };
 
+  onSearch = value => console.log(value);
+
+  onChange = event => console.log(event);
+  renderTag = () => {
+    const { tags } = this.state
+   return <Radio.Group className="tag-main" defaultValue="a" size="middle" onChange={event=>this.onChange(event)}>
+      {
+        tags.map(item=><Radio.Button className="tag-item" key={item.name} value={item.value}>{item.name}</Radio.Button>)
+      }
+    </Radio.Group>
+  }
   render() {
     const { data, pagination, loading } = this.state;
     return (
-      <Table
-        columns={columns}
-        rowKey={record => record.login.uuid}
-        dataSource={data}
-        pagination={pagination}
-        loading={loading}
-        onChange={this.handleTableChange}
-      />
+      <>
+        <div className="top-main">
+          <Search
+            placeholder="input search text"
+            allowClear
+            autoSize
+            onSearch={value=>this.onSearch(value)}
+            size="middle"
+          />
+          { this.renderTag() }
+        </div>
+        <Table
+          columns={columns}
+          rowKey={record => record.login.uuid}
+          dataSource={data}
+          pagination={pagination}
+          loading={loading}
+          onChange={this.handleTableChange}
+        />
+      </>
     );
   }
 }

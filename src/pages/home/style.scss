@@ -9,3 +9,33 @@
     margin: 0 auto;
     overflow: hidden;
 }
+.top-main {
+    max-width: 760px;
+    margin: 50px auto;
+    text-align: center;
+}
+.tag-item {
+    border-radius: 10px !important;
+    margin: 0 20px;
+    &:first-child {
+        border-left: none;
+    }
+    &:before {
+        width:0 !important;
+    }
+
+   border-color: transparent;
+}
+
+.ant-radio-button-wrapper-checked {
+    border-left: 1px solid #1890ff !important;
+}
+
+.tag-main {
+    margin-top: 15px;
+}
+
+.search {
+ height: 150px;
+}
+

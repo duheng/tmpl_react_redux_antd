@@ -18,8 +18,8 @@ export default class NavMenuTop extends PureComponent {
     const { current } = this.state;
     return (
       <Menu onClick={this.handleClick} selectedKeys={[current]} mode="horizontal">
-        <Menu.Item key="mail" icon={<MailOutlined />}>
-          Navigation One
+        <Menu.Item key="mail">
+          标签列表
         </Menu.Item>
        
       </Menu>
